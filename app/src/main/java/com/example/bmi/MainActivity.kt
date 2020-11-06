@@ -17,6 +17,11 @@ import kotlin.math.round
 
 class MainActivity : AppCompatActivity() {
     //Global variable
+    //lateinit = late initialize, not yet assign value
+    private lateinit var editTextWeight:EditText
+    private lateinit var editTextHeight:EditText
+    private lateinit var textViewBMI:TextView
+    private lateinit var imageViewBMI: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +33,13 @@ class MainActivity : AppCompatActivity() {
         val editTextHeight: EditText = findViewById(R.id.editTextHeight)
         val buttonCalculate: Button = findViewById(R.id.buttonCalculate)
         val textViewBMI: TextView = findViewById(R.id.textViewBMI)
-        var img : ImageView = findViewById(R.id.imageViewBMI)
+        imageViewBMI = findViewById(R.id.imageViewBMI)
+        val buttonReset:Button = findViewById(R.id.buttonReset)
+        buttonReset.setOnClickListener{
+            editTextWeight.text = null
+            editTextHeight.text.clear()
+            textViewBMI.text = null
+        }
 
         buttonCalculate.setOnClickListener {
             //To retrieve value from a View
@@ -36,24 +47,24 @@ class MainActivity : AppCompatActivity() {
             val weight: Double = editTextWeight.text.toString().toDouble()
             val height: Double = editTextHeight.text.toString().toDouble()
             val bmi = weight/(height/100).pow(2)
-            var bmiText = ""
+            var status : String
 
-            //TODO: Determine status of BMI and present result to the user
-            if (bmi<18.5) {
-                img.setImageResource(R.drawable.under)
-                bmiText = "Underweight"
+            if (bmi<=18.5) {
+                imageViewBMI.setImageResource(R.drawable.under)
+                status = getString(R.string.underweight)
             } else if (bmi<25) {
-                img.setImageResource(R.drawable.normal)
-                bmiText = "Normal"
+                imageViewBMI.setImageResource(R.drawable.normal)
+                status = getString(R.string.normal)
             } else {
-                img.setImageResource(R.drawable.over)
-                bmiText = "Overweight"
+                imageViewBMI.setImageResource(R.drawable.over)
+                status = getString(R.string.overweight)
             }
 
             //Underweight = <18.5
             //Normal weight = 18.5–24.9
             //Overweight = >= 25
-            textViewBMI.text = "BMI:" + round(bmi).toString() + ", Status:" + bmiText
+            //textViewBMI.text = "BMI:" + round(bmi).toString() + ", Status:" + status
+            textViewBMI.text = String.format("%s %1.2f %s %s", "BMI:", bmi, ", Status:", status)
         }//end of onClickListener
 
 
